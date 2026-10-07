@@ -29,7 +29,7 @@ button,select,input{font:inherit}.app{max-width:1120px;margin:auto;padding:18px 
 <section id="matrixPanel" class="panel" style="display:none"><div class="head"><h2>カテゴリ変換マトリクス</h2><span class="muted">●を押すと検索</span></div><div class="matrix-wrap"><table id="matrix" class="matrix"></table></div><div class="legend">● 到達可能　　同一カテゴリは —　　DLC / カテゴリ付与効果は設定に連動</div></section>
 <p class="foot">データはリディー＆スールのアトリエ Wiki* の「調合」「攻撃」「回復」「補助」「探索」「装飾品」「調合逆引き」を参照して整理しています。Wikiでは、カテゴリ欄の括弧付き材料はそのカテゴリなら何でもよく、特性は調合したアイテムへ継承できると説明されています。<br><a href="https://wikiwiki.jp/lydie/%E8%AA%BF%E5%90%88/%E8%AA%BF%E5%90%88" target="_blank" rel="noopener">調合一覧</a>　<a href="https://wikiwiki.jp/lydie/%E8%AA%BF%E5%90%88/%E8%AA%BF%E5%90%88%E9%80%86%E5%BC%95%E3%81%8D" target="_blank" rel="noopener">調合逆引き</a></p>
 </main>
-<script src="data-1.js"></script><script src="data-2.js"></script><script src="data-3.js"></script><script src="data-4.js"></script>
+<script src="data.js"></script>
 <script>
 const C=["油","糸素材","お菓子","エリキシル","香り","紙","火薬","気体","きのこ","魚介類","金属","薬の材料","原石","鉱石","果物","食材","食品","植物類","神秘の力","砂","装飾品","中和剤","動物素材","毒の材料","布","粘土","燃料","爆弾","ハチの巣","花","武器素材","プニプニ玉","防具素材","宝石","魔法の草","魔法の道具","水","虫","木材","薬品","竜素材"];
 const R=window.ATELIER_RECIPES;
@@ -63,31 +63,46 @@ function reachableFrom(a){
 }
 function shortestPaths(a,b,maxPaths=12){
  if(!a||!b||a===b)return[];
- const g=buildGraph(), start="C:"+a, goal="C:"+b;
- const dist=new Map([[start,0]]), parents=new Map(), q=[start], targetDist=null;
+ const g=buildGraph(),start="C:"+a,goal="C:"+b;
+ const dist=new Map([[start,0]]);
+ const parents=new Map();
+ const q=[start];
+ let targetDist=null;
  for(let qi=0;qi<q.length;qi++){
-   const cur=q[qi], d=dist.get(cur);
-   if(targetDist!==null && d>=targetDist)continue;
+   const cur=q[qi],d=dist.get(cur);
+   if(targetDist!==null&&d>=targetDist)continue;
    for(const e of (g.get(cur)||[])){
      const nd=d+1;
-     if(targetDist!==null && nd>targetDist)continue;
-     if(!dist.has(e.to)){dist.set(e.to,nd);q.push(e.to);parents.set(e.to,[{prev:cur,meta:e.meta}]);if(e.to===goal)targetDist=nd;}
-     else if(dist.get(e.to)===nd){const arr=parents.get(e.to)||[];if(arr.length<8)arr.push({prev:cur,meta:e.meta});parents.set(e.to,arr);}
+     if(targetDist!==null&&nd>targetDist)continue;
+     if(!dist.has(e.to)){
+       dist.set(e.to,nd);parents.set(e.to,[{prev:cur,meta:e.meta}]);q.push(e.to);
+       if(e.to===goal)targetDist=nd;
+     }else if(dist.get(e.to)===nd){
+       const arr=parents.get(e.to)||[];
+       if(arr.length<8&&!arr.some(x=>x.prev===cur&&x.meta.r===e.meta.r))arr.push({prev:cur,meta:e.meta});
+       parents.set(e.to,arr);
+     }
    }
  }
  if(!dist.has(goal))return[];
  const out=[];
- function walk(node,path,edges){
+ function build(node,nodesRev,edgesRev){
    if(out.length>=maxPaths)return;
-   if(node===start){out.push({nodes:[start,...path.reverse()],edges:[...edges].reverse()});path.reverse();return;}
+   if(node===start){
+     out.push({nodes:[start,...nodesRev.slice().reverse()],edges:edgesRev.slice().reverse()});
+     return;
+   }
    for(const p of (parents.get(node)||[])){
      if(out.length>=maxPaths)break;
-     walk(p.prev,[node,...path],[...edges,p.meta]);
+     build(p.prev,[node,...nodesRev],[p.meta,...edgesRev]);
    }
  }
- walk(goal,[],[]);
- const seen=new Set(), clean=[];
- for(const p of out){const key=p.nodes.join(">");if(!seen.has(key)){seen.add(key);clean.push(p)}}
+ build(goal,[],[]);
+ const seen=new Set(),clean=[];
+ for(const p of out){
+   const key=p.nodes.join(">");
+   if(!seen.has(key)){seen.add(key);clean.push(p);}
+ }
  return clean;
 }
 function nodeLabel(n){return n.slice(2)}
