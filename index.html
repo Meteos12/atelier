@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#6d5dfc"><title>アトリエ特性ルート</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#20212a;--sub:#747785;--line:#e7e8ef;--accent:#6957e8;--accent2:#eeeaff;--good:#16865f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP","Yu Gothic",sans-serif}
+.app{max-width:1080px;margin:auto;padding:18px 14px 70px}.hero{padding:24px 20px;border-radius:26px;background:linear-gradient(135deg,#fff 10%,#f0edff);border:1px solid #e5e1fb;box-shadow:0 12px 35px #2920500d}.tag{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--accent)}h1{font-size:clamp(25px,5vw,38px);margin:6px 0 8px;letter-spacing:-.04em}.hero p{margin:0;color:var(--sub);font-size:13px;line-height:1.8}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:14px;box-shadow:0 7px 25px #27243d08}.controls{display:grid;grid-template-columns:1fr 48px 1fr;gap:10px;align-items:end}.label{font-size:11px;font-weight:900;color:var(--sub);margin-bottom:6px}.select{height:52px;width:100%;border:1px solid var(--line);border-radius:14px;background:#fff;padding:0 12px;font-size:16px;font-weight:800;color:var(--ink)}button{border:0;cursor:pointer}.swap{height:52px;border:1px solid #ddd8fb;border-radius:14px;background:var(--accent2);color:var(--accent);font-size:21px;font-weight:900}.tabs{display:flex;gap:7px;margin-top:14px}.tab{padding:9px 13px;border-radius:999px;background:#f3f3f7;color:var(--sub);font-weight:800;font-size:12px}.tab.on{background:var(--ink);color:#fff}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.head h2{font-size:16px;margin:0}.muted{font-size:11px;color:var(--sub)}.route{border:1px solid var(--line);border-radius:17px;padding:15px;margin:9px 0;background:#fff}.route-top{display:flex;justify-content:space-between;gap:10px}.route-title{font-size:14px;font-weight:950}.badge{font-size:10px;background:#f0f8f4;color:var(--good);padding:5px 8px;border-radius:999px;font-weight:900}.chain{display:flex;align-items:center;gap:7px;overflow:auto;padding:14px 0 4px}.node{min-width:112px;background:#f7f6ff;border:1px solid #e9e5ff;border-radius:13px;padding:9px;text-align:center}.node.cat{background:#fff}.node .small{font-size:10px;color:var(--sub);font-weight:800}.node strong{display:block;font-size:13px;margin-top:3px}.arrow{color:#aaa;font-weight:900}.detail{font-size:11px;color:var(--sub);line-height:1.65}.detail b{color:var(--ink)}
+.matrix-wrap{overflow:auto;border:1px solid var(--line);border-radius:17px}.matrix{border-collapse:collapse;min-width:900px;width:100%;font-size:11px}.matrix th,.matrix td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;text-align:center}.matrix th{background:#fafafd;font-weight:900;white-space:nowrap;position:sticky;top:0}.matrix .left{position:sticky;left:0;background:#fff;text-align:left;z-index:2}.matrix td.hit{background:#f0edff;color:var(--accent);font-weight:950;cursor:pointer}.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--sub)}
+.empty{padding:28px;text-align:center;color:var(--sub);border:1px dashed var(--line);border-radius:15px}.foot{font-size:10px;color:#9295a0;line-height:1.7;margin:14px 3px}
+@media(max-width:650px){.controls{grid-template-columns:1fr}.swap{height:40px}.tabs{overflow:auto}.tab{white-space:nowrap}}
+</style></head>
+<body><main class="app">
+<header class="hero"><div class="tag">ATELIER / LYDIE & SUELLE</div><h1>特性引き継ぎルート</h1><p>「元カテゴリ」から「目的カテゴリ」へ、特性を運ぶための中継調合品を最短順に探します。マトリクスのマスを押しても検索できます。</p></header>
+<section class="panel">
+<div class="controls"><div><div class="label">FROM　元カテゴリ</div><select id="from" class="select"></select></div><button id="swap" class="swap">⇄</button><div><div class="label">TO　目的カテゴリ</div><select id="to" class="select"></select></div></div>
+<div class="tabs"><button class="tab on" id="tabRoute">ルート検索</button><button class="tab" id="tabMatrix">カテゴリ一覧</button></div>
+</section>
+<section id="routePanel" class="panel"><div class="head"><h2>引き継ぎルート</h2><span id="count" class="muted"></span></div><div id="routes"></div></section>
+<section id="matrixPanel" class="panel" style="display:none"><div class="head"><h2>カテゴリ変換マトリクス</h2><span class="muted">●を押すと検索</span></div><div class="matrix-wrap"><table id="matrix" class="matrix"></table></div><div class="legend">● 到達可能　　同一カテゴリは —　　空欄は現在の登録データでは到達不可</div></section>
+<p class="foot">データはリディー＆スールのアトリエ Wiki* の「調合」「調合逆引き」等を参照して整理。ここでの「ルート」は、材料カテゴリを中継調合品のカテゴリへ運ぶ用途を表します。効果によるカテゴリ付与は別ルールとして扱う必要があります。</p>
+</main>
+<script>
+const R=[
+{from:["燃料"],to:["中和剤"],item:"中和剤・赤",req:"燃料×2＋水×1"},
+{from:["油"],to:["中和剤"],item:"中和剤・青",req:"油×2＋水×1"},
+{from:["粘土"],to:["中和剤"],item:"中和剤・黄",req:"粘土×2＋水×1"},
+{from:["植物類"],to:["中和剤"],item:"中和剤・緑",req:"植物類×2＋水×1"},
+{from:["毒の材料"],to:["中和剤"],item:"中和剤・紫",req:"毒の材料×2＋水×1"},
+{from:["中和剤"],to:["粘土","エリキシル"],item:"錬金粘土",req:"粘土×3＋神秘の力＋薬品＋中和剤"},
+{from:["粘土"],to:["粘土","砂"],item:"ポリッシュ",req:"白灰岩×2＋水＋粘土＋燃料×2"},
+{from:["虫","魚介類","食材"],to:["食品","粘土"],item:"おいしそうな練り餌",req:"麦粉×2＋虫＋魚介類＋食材"},
+{from:["植物類"],to:["紙","燃料"],item:"ゼッテル",req:"植物類×3＋水×2＋中和剤"},
+{from:["鉱石"],to:["武器素材","金属"],item:"インゴット",req:"鉱石×2＋燃料×2"},
+{from:["糸素材"],to:["防具素材","布"],item:"クロース",req:"糸素材＋植物類＋動物素材"},
+{from:["紙"],to:["木材","魔法の道具"],item:"地球儀の玉",req:"多色染料＋木材＋紙×2"},
+{from:["植物類"],to:["木材"],item:"植物系木材中継",req:"植物類を材料に含む木材系調合品"},
+{from:["粘土","中和剤"],to:["鉱石","宝石"],item:"原石系",req:"錬金粘土→各種原石"},
+{from:["中和剤"],to:["金属"],item:"銀食器セット",req:"シルヴァリア＋ポリッシュ＋蒸留水＋中和剤"},
+{from:["ゼッテル"],to:["紙","燃料"],item:"終わりのない日記帳",req:"ゼッテル×4＋黄金樹の葉＋エリキシル＋神秘の力"},
+{from:["万能中和剤・虹"],to:["中和剤"],item:"万能中和剤・虹",req:"蒸留水＋中和剤＋神秘の力＋エリキシル"},
+{from:["宝石"],to:["魔法の道具","中和剤"],item:"調和の雫",req:"聖水×3＋精霊石＋宝石＋神秘の力"},
+{from:["中和剤","エリキシル"],to:["魔法の道具","エリキシル"],item:"きらめきのプネウマ",req:"ドンケルハイト＋原初の灰＋万能中和剤・虹＋気体"},
+{from:["魔法の道具","木材","燃料"],to:["魔法の道具","エリキシル","薬品"],item:"原初の灰",req:"黄金樹の葉＋魔法の道具＋木材＋燃料"},
+{from:["魔法の道具","金属"],to:["魔法の道具","金属"],item:"高反応錬金釜",req:"ハルモニウム×2＋金属×2＋燃料×2＋万能中和剤・虹"},
+{from:["神秘の力","宝石","金属"],to:["魔法の道具"],item:"輪廻の羅針盤",req:"賢者の石＋偉大なる尾＋深核＋ハルモニウム"}
+];
+const C=[...new Set(R.flatMap(x=>[...x.from,...x.to]))].sort((a,b)=>a.localeCompare(b,"ja"));
+const $=id=>document.getElementById(id), from=$("from"),to=$("to");
+function fill(s){s.innerHTML='<option value="">選択してください</option>'+C.map(x=>'<option>'+x+'</option>').join("")}
+fill(from);fill(to);from.value="魚介類";to.value="宝石";
+function edges(cat){return R.filter(r=>r.from.includes(cat))}
+function paths(a,b){
+if(!a||!b||a===b)return[];
+const out=[],q=[[a,[{cat:a}]]],seen=new Set();
+while(q.length&&out.length<10){const [cur,p]=q.shift();for(const e of edges(cur)){for(const n of e.to){if(p.some(x=>x.cat===n))continue;const np=[...p,{item:e.item,req:e.req},{cat:n}];if(n===b){out.push(np);continue}const key=n+"|"+np.map(x=>x.cat||x.item).join(">");if(!seen.has(key)){seen.add(key);q.push([n,np])}}}}
+out.sort((a,b)=>a.length-b.length);return out;
+}
+function routeHTML(p){return '<article class="route"><div class="route-top"><div class="route-title">'+p[0].cat+' → '+p[p.length-1].cat+'</div><span class="badge">'+((p.length-1)/2)+'段階</span></div><div class="chain">'+p.map((x,i)=>x.cat?'<div class="node cat"><div class="small">カテゴリ</div><strong>'+x.cat+'</strong></div>':'<div class="arrow">›</div><div class="node"><div class="small">中継調合品</div><strong>'+x.item+'</strong></div>').join("")+'</div><div class="detail">'+p.filter(x=>x.item).map((x,i)=>'<div><b>'+x.item+'</b>：'+x.req+'</div>').join("")+'</div></article>'}
+function render(){const ps=paths(from.value,to.value);$("count").textContent=ps.length+"ルート";$("routes").innerHTML=ps.length?ps.map(routeHTML).join(""):'<div class="empty">この2カテゴリ間の登録ルートがありません。<br>別のカテゴリを選ぶか、マトリクスから探してください。</div>'}
+function matrix(){let h='<thead><tr><th>FROM ＼ TO</th>'+C.map(x=>'<th>'+x+'</th>').join("")+'</tr></thead><tbody>';for(const a of C){h+='<tr><th class="left">'+a+'</th>'+C.map(b=>{const ok=paths(a,b).length>0;return '<td class="'+(ok?'hit':'')+'" data-a="'+a+'" data-b="'+b+'">'+(a===b?'—':ok?'●':'')+'</td>'}).join("")+'</tr>'} $("matrix").innerHTML=h+'</tbody>'}
+from.onchange=render;to.onchange=render;$("swap").onclick=()=>{const x=from.value;from.value=to.value;to.value=x;render()};
+$("tabRoute").onclick=()=>{$("routePanel").style.display="block";$("matrixPanel").style.display="none";$("tabRoute").classList.add("on");$("tabMatrix").classList.remove("on")};
+$("tabMatrix").onclick=()=>{$("routePanel").style.display="none";$("matrixPanel").style.display="block";$("tabMatrix").classList.add("on");$("tabRoute").classList.remove("on")};
+$("matrix").onclick=e=>{const td=e.target.closest(".hit");if(!td)return;from.value=td.dataset.a;to.value=td.dataset.b;$("tabRoute").click();render()};
+matrix();render();
+</script></body></html>
