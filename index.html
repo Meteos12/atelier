@@ -1,72 +1,121 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#6d5dfc"><title>アトリエ特性ルート</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#6d5dfc">
+<title>リディー＆スール 特性ルート</title>
 <style>
-:root{--bg:#f6f7fb;--card:#fff;--ink:#20212a;--sub:#747785;--line:#e7e8ef;--accent:#6957e8;--accent2:#eeeaff;--good:#16865f}
+:root{--bg:#f6f7fb;--card:#fff;--ink:#20212a;--sub:#747785;--line:#e7e8ef;--accent:#6957e8;--accent2:#eeeaff;--good:#16865f;--warn:#9b6a00;--blue:#476ad7}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP","Yu Gothic",sans-serif}
-.app{max-width:1080px;margin:auto;padding:18px 14px 70px}.hero{padding:24px 20px;border-radius:26px;background:linear-gradient(135deg,#fff 10%,#f0edff);border:1px solid #e5e1fb;box-shadow:0 12px 35px #2920500d}.tag{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--accent)}h1{font-size:clamp(25px,5vw,38px);margin:6px 0 8px;letter-spacing:-.04em}.hero p{margin:0;color:var(--sub);font-size:13px;line-height:1.8}
+button,select,input{font:inherit}.app{max-width:1120px;margin:auto;padding:18px 14px 72px}.hero{padding:24px 20px;border-radius:26px;background:linear-gradient(135deg,#fff 10%,#f0edff);border:1px solid #e5e1fb;box-shadow:0 12px 35px #2920500d}.tag{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--accent)}h1{font-size:clamp(25px,5vw,38px);margin:6px 0 8px;letter-spacing:-.04em}.hero p{margin:0;color:var(--sub);font-size:13px;line-height:1.8}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:14px;box-shadow:0 7px 25px #27243d08}.controls{display:grid;grid-template-columns:1fr 48px 1fr;gap:10px;align-items:end}.label{font-size:11px;font-weight:900;color:var(--sub);margin-bottom:6px}.select{height:52px;width:100%;border:1px solid var(--line);border-radius:14px;background:#fff;padding:0 12px;font-size:16px;font-weight:800;color:var(--ink)}button{border:0;cursor:pointer}.swap{height:52px;border:1px solid #ddd8fb;border-radius:14px;background:var(--accent2);color:var(--accent);font-size:21px;font-weight:900}.tabs{display:flex;gap:7px;margin-top:14px}.tab{padding:9px 13px;border-radius:999px;background:#f3f3f7;color:var(--sub);font-weight:800;font-size:12px}.tab.on{background:var(--ink);color:#fff}
-.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.head h2{font-size:16px;margin:0}.muted{font-size:11px;color:var(--sub)}.route{border:1px solid var(--line);border-radius:17px;padding:15px;margin:9px 0;background:#fff}.route-top{display:flex;justify-content:space-between;gap:10px}.route-title{font-size:14px;font-weight:950}.badge{font-size:10px;background:#f0f8f4;color:var(--good);padding:5px 8px;border-radius:999px;font-weight:900}.chain{display:flex;align-items:center;gap:7px;overflow:auto;padding:14px 0 4px}.node{min-width:112px;background:#f7f6ff;border:1px solid #e9e5ff;border-radius:13px;padding:9px;text-align:center}.node.cat{background:#fff}.node .small{font-size:10px;color:var(--sub);font-weight:800}.node strong{display:block;font-size:13px;margin-top:3px}.arrow{color:#aaa;font-weight:900}.detail{font-size:11px;color:var(--sub);line-height:1.65}.detail b{color:var(--ink)}
-.matrix-wrap{overflow:auto;border:1px solid var(--line);border-radius:17px}.matrix{border-collapse:collapse;min-width:900px;width:100%;font-size:11px}.matrix th,.matrix td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;text-align:center}.matrix th{background:#fafafd;font-weight:900;white-space:nowrap;position:sticky;top:0}.matrix .left{position:sticky;left:0;background:#fff;text-align:left;z-index:2}.matrix td.hit{background:#f0edff;color:var(--accent);font-weight:950;cursor:pointer}.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--sub)}
-.empty{padding:28px;text-align:center;color:var(--sub);border:1px dashed var(--line);border-radius:15px}.foot{font-size:10px;color:#9295a0;line-height:1.7;margin:14px 3px}
-@media(max-width:650px){.controls{grid-template-columns:1fr}.swap{height:40px}.tabs{overflow:auto}.tab{white-space:nowrap}}
-</style></head>
+.options{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.check{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:11px;color:var(--sub);font-weight:800;background:#fafafd}.check input{accent-color:var(--accent)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.head h2{font-size:16px;margin:0}.muted{font-size:11px;color:var(--sub)}.summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:11px}.pill{padding:5px 8px;border-radius:999px;font-size:10px;font-weight:900;background:#f5f5f8;color:var(--sub)}.pill.good{background:#f0f8f4;color:var(--good)}.pill.blue{background:#eef3ff;color:var(--blue)}.pill.warn{background:#fff7e8;color:var(--warn)}
+.route{border:1px solid var(--line);border-radius:17px;padding:15px;margin:9px 0;background:#fff}.route-top{display:flex;justify-content:space-between;gap:10px}.route-title{font-size:14px;font-weight:950}.badge{font-size:10px;background:#f0f8f4;color:var(--good);padding:5px 8px;border-radius:999px;font-weight:900;white-space:nowrap}.chain{display:flex;align-items:center;gap:6px;overflow:auto;padding:14px 0 5px}.node{min-width:126px;background:#f7f6ff;border:1px solid #e9e5ff;border-radius:13px;padding:10px;text-align:center}.node.cat{background:#fff}.node.item{box-shadow:0 2px 9px #2b25520b}.node .small{font-size:9px;color:var(--sub);font-weight:800}.node strong{display:block;font-size:13px;margin-top:3px}.arrow{color:#aaa;font-weight:900}.materials{border-top:1px dashed var(--line);margin-top:8px;padding-top:8px;display:flex;gap:6px;flex-wrap:wrap}.mat{font-size:10px;padding:4px 7px;border-radius:8px;background:#f5f5f7;color:#555968}.mat.cat{background:#eef3ff;color:#476ad7}.mat.carry{outline:2px solid #d8d2ff;background:#eeeaff;color:#5a4bd0;font-weight:900}.route-note{font-size:10px;color:var(--sub);margin-top:7px}.route-note b{color:var(--ink)}
+.matrix-wrap{overflow:auto;border:1px solid var(--line);border-radius:17px}.matrix{border-collapse:collapse;min-width:1040px;width:100%;font-size:10px}.matrix th,.matrix td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px;text-align:center}.matrix th{background:#fafafd;font-weight:900;white-space:nowrap;position:sticky;top:0;z-index:1}.matrix .left{position:sticky;left:0;background:#fff;text-align:left;z-index:2}.matrix td.hit{background:#f0edff;color:var(--accent);font-weight:950;cursor:pointer}.matrix td.hit:hover{filter:brightness(.98)}.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--sub)}
+.empty{padding:28px;text-align:center;color:var(--sub);border:1px dashed var(--line);border-radius:15px}.foot{font-size:10px;color:#9295a0;line-height:1.8;margin:14px 3px}.foot a{color:#6b5be7}.source-note{font-size:10px;color:var(--sub);margin-top:8px}
+@media(max-width:650px){.controls{grid-template-columns:1fr}.swap{height:40px}.tabs{overflow:auto}.tab{white-space:nowrap}.chain{padding-bottom:8px}.node{min-width:112px}.options{display:grid;grid-template-columns:1fr 1fr}}
+</style>
+</head>
 <body><main class="app">
-<header class="hero"><div class="tag">ATELIER / LYDIE & SUELLE</div><h1>特性引き継ぎルート</h1><p>「元カテゴリ」から「目的カテゴリ」へ、特性を運ぶための中継調合品を最短順に探します。マトリクスのマスを押しても検索できます。</p></header>
+<header class="hero"><div class="tag">ATELIER / LYDIE & SUELLE</div><h1>特性引き継ぎルート</h1><p>カテゴリだけでなく「完成した調合品を次のレシピの材料に使う」流れまで追跡。魚介類 → 練り餌 → 粘土 → ポリッシュ → 宝石、のような実際の中継を最短順に探します。</p></header>
 <section class="panel">
 <div class="controls"><div><div class="label">FROM　元カテゴリ</div><select id="from" class="select"></select></div><button id="swap" class="swap">⇄</button><div><div class="label">TO　目的カテゴリ</div><select id="to" class="select"></select></div></div>
+<div class="options"><label class="check"><input id="includeDlc" type="checkbox" checked> DLCレシピを含める</label><label class="check"><input id="includeEffects" type="checkbox" checked> カテゴリ付与効果も含める</label></div>
 <div class="tabs"><button class="tab on" id="tabRoute">ルート検索</button><button class="tab" id="tabMatrix">カテゴリ一覧</button></div>
 </section>
-<section id="routePanel" class="panel"><div class="head"><h2>引き継ぎルート</h2><span id="count" class="muted"></span></div><div id="routes"></div></section>
-<section id="matrixPanel" class="panel" style="display:none"><div class="head"><h2>カテゴリ変換マトリクス</h2><span class="muted">●を押すと検索</span></div><div class="matrix-wrap"><table id="matrix" class="matrix"></table></div><div class="legend">● 到達可能　　同一カテゴリは —　　空欄は現在の登録データでは到達不可</div></section>
-<p class="foot">データはリディー＆スールのアトリエ Wiki* の「調合」「調合逆引き」等を参照して整理。ここでの「ルート」は、材料カテゴリを中継調合品のカテゴリへ運ぶ用途を表します。効果によるカテゴリ付与は別ルールとして扱う必要があります。</p>
+<section id="routePanel" class="panel"><div class="head"><h2>引き継ぎルート</h2><span id="count" class="muted"></span></div><div id="summary" class="summary"></div><div id="routes"></div></section>
+<section id="matrixPanel" class="panel" style="display:none"><div class="head"><h2>カテゴリ変換マトリクス</h2><span class="muted">●を押すと検索</span></div><div class="matrix-wrap"><table id="matrix" class="matrix"></table></div><div class="legend">● 到達可能　　同一カテゴリは —　　DLC / カテゴリ付与効果は設定に連動</div></section>
+<p class="foot">データはリディー＆スールのアトリエ Wiki* の「調合」「攻撃」「回復」「補助」「探索」「装飾品」「調合逆引き」を参照して整理しています。Wikiでは、カテゴリ欄の括弧付き材料はそのカテゴリなら何でもよく、特性は調合したアイテムへ継承できると説明されています。<br><a href="https://wikiwiki.jp/lydie/%E8%AA%BF%E5%90%88/%E8%AA%BF%E5%90%88" target="_blank" rel="noopener">調合一覧</a>　<a href="https://wikiwiki.jp/lydie/%E8%AA%BF%E5%90%88/%E8%AA%88%E5%88%86%8E%E5%BC%95%E3%81%8D" target="_blank" rel="noopener">調合逆引き</a></p>
 </main>
+<script src="data-1.js"></script><script src="data-2.js"></script><script src="data-3.js"></script><script src="data-4.js"></script>
 <script>
-const R=[
-{from:["燃料"],to:["中和剤"],item:"中和剤・赤",req:"燃料×2＋水×1"},
-{from:["油"],to:["中和剤"],item:"中和剤・青",req:"油×2＋水×1"},
-{from:["粘土"],to:["中和剤"],item:"中和剤・黄",req:"粘土×2＋水×1"},
-{from:["植物類"],to:["中和剤"],item:"中和剤・緑",req:"植物類×2＋水×1"},
-{from:["毒の材料"],to:["中和剤"],item:"中和剤・紫",req:"毒の材料×2＋水×1"},
-{from:["中和剤"],to:["粘土","エリキシル"],item:"錬金粘土",req:"粘土×3＋神秘の力＋薬品＋中和剤"},
-{from:["粘土"],to:["粘土","砂"],item:"ポリッシュ",req:"白灰岩×2＋水＋粘土＋燃料×2"},
-{from:["虫","魚介類","食材"],to:["食品","粘土"],item:"おいしそうな練り餌",req:"麦粉×2＋虫＋魚介類＋食材"},
-{from:["植物類"],to:["紙","燃料"],item:"ゼッテル",req:"植物類×3＋水×2＋中和剤"},
-{from:["鉱石"],to:["武器素材","金属"],item:"インゴット",req:"鉱石×2＋燃料×2"},
-{from:["糸素材"],to:["防具素材","布"],item:"クロース",req:"糸素材＋植物類＋動物素材"},
-{from:["紙"],to:["木材","魔法の道具"],item:"地球儀の玉",req:"多色染料＋木材＋紙×2"},
-
-{from:["粘土"],to:["粘土","エリキシル"],item:"錬金粘土",req:"粘土×3＋神秘の力＋薬品＋中和剤"},
-{from:["錬金粘土"],to:["鉱石","宝石"],item:"ジェット原石",req:"漆黒の倒木石×3＋錬金粘土＋水"},
-{from:["中和剤"],to:["粘土","エリキシル"],item:"錬金粘土",req:"粘土×3＋神秘の力＋薬品＋中和剤"},
-{from:["中和剤"],to:["金属"],item:"銀食器セット",req:"シルヴァリア＋ポリッシュ＋蒸留水＋中和剤"},
-{from:["ゼッテル"],to:["紙","燃料"],item:"終わりのない日記帳",req:"ゼッテル×4＋黄金樹の葉＋エリキシル＋神秘の力"},
-{from:["万能中和剤・虹"],to:["中和剤"],item:"万能中和剤・虹",req:"蒸留水＋中和剤＋神秘の力＋エリキシル"},
-{from:["宝石"],to:["魔法の道具","中和剤"],item:"調和の雫",req:"聖水×3＋精霊石＋宝石＋神秘の力"},
-{from:["中和剤","エリキシル"],to:["魔法の道具","エリキシル"],item:"きらめきのプネウマ",req:"ドンケルハイト＋原初の灰＋万能中和剤・虹＋気体"},
-{from:["魔法の道具","木材","燃料"],to:["魔法の道具","エリキシル","薬品"],item:"原初の灰",req:"黄金樹の葉＋魔法の道具＋木材＋燃料"},
-{from:["魔法の道具","金属"],to:["魔法の道具","金属"],item:"高反応錬金釜",req:"ハルモニウム×2＋金属×2＋燃料×2＋万能中和剤・虹"},
-{from:["神秘の力","宝石","金属"],to:["魔法の道具"],item:"輪廻の羅針盤",req:"賢者の石＋偉大なる尾＋深核＋ハルモニウム"}
-];
 const C=["油","糸素材","お菓子","エリキシル","香り","紙","火薬","気体","きのこ","魚介類","金属","薬の材料","原石","鉱石","果物","食材","食品","植物類","神秘の力","砂","装飾品","中和剤","動物素材","毒の材料","布","粘土","燃料","爆弾","ハチの巣","花","武器素材","プニプニ玉","防具素材","宝石","魔法の草","魔法の道具","水","虫","木材","薬品","竜素材"];
+const R=window.ATELIER_RECIPES;
+const EFFECTS={"中和剤・赤":"火薬","中和剤・青":"香り","中和剤・黄":"薬の材料","中和剤・緑":"食材","中和剤・紫":"油"};
 const $=id=>document.getElementById(id), from=$("from"),to=$("to");
-function fill(s){s.innerHTML='<option value="">選択してください</option>'+C.map(x=>'<option>'+x+'</option>').join("")}
+function esc(s){return String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));}
+function fill(s){s.innerHTML='<option value="">選択してください</option>'+C.map(x=>'<option>'+esc(x)+'</option>').join("");}
 fill(from);fill(to);from.value="魚介類";to.value="宝石";
-function edges(cat){return R.filter(r=>r.from.includes(cat))}
-function paths(a,b){
-if(!a||!b||a===b)return[];
-const out=[],q=[[a,[{cat:a}]]],seen=new Set();
-while(q.length&&out.length<10){const [cur,p]=q.shift();for(const e of edges(cur)){for(const n of e.to){if(p.some(x=>x.cat===n))continue;const np=[...p,{item:e.item,req:e.req},{cat:n}];if(n===b){out.push(np);continue}const key=n+"|"+np.map(x=>x.cat||x.item).join(">");if(!seen.has(key)){seen.add(key);q.push([n,np])}}}}
-out.sort((a,b)=>a.length-b.length);return out;
+function settings(){return{dlc:$("includeDlc").checked,effects:$("includeEffects").checked}}
+function activeRecipes(){const s=settings();return R.filter(r=>!r.d||s.dlc)}
+let graphCache=null;
+function buildGraph(){
+ const opt=settings(), key=(opt.dlc?"D":"N")+(opt.effects?"E":"N");
+ if(graphCache && graphCache.key===key)return graphCache.g;
+ const g=new Map(), add=(a,b,meta)=>{if(!g.has(a))g.set(a,[]);g.get(a).push({to:b,meta})};
+ for(const r of activeRecipes()){
+   const item="I:"+r.n;
+   for(const inp of r.i){if(inp.startsWith("@")) add("C:"+inp.slice(1),item,{r,carry:inp.slice(1)}) ; else add("I:"+inp,item,{r,carry:inp,exact:true});}
+   for(const cat of r.c) if(C.includes(cat)) add(item,"C:"+cat,{r,fromItem:true,cat});
+   if(opt.effects && EFFECTS[r.n]) add(item,"C:"+EFFECTS[r.n],{r,fromItem:true,cat:EFFECTS[r.n],effect:true});
+ }
+ graphCache={key,g};
+ return g;
 }
-function routeHTML(p){return '<article class="route"><div class="route-top"><div class="route-title">'+p[0].cat+' → '+p[p.length-1].cat+'</div><span class="badge">'+((p.length-1)/2)+'段階</span></div><div class="chain">'+p.map((x,i)=>x.cat?'<div class="node cat"><div class="small">カテゴリ</div><strong>'+x.cat+'</strong></div>':'<div class="arrow">›</div><div class="node"><div class="small">中継調合品</div><strong>'+x.item+'</strong></div>').join("")+'</div><div class="detail">'+p.filter(x=>x.item).map((x,i)=>'<div><b>'+x.item+'</b>：'+x.req+'</div>').join("")+'</div></article>'}
-function render(){const ps=paths(from.value,to.value);$("count").textContent=ps.length+"ルート";$("routes").innerHTML=ps.length?ps.map(routeHTML).join(""):'<div class="empty">この2カテゴリ間の登録ルートがありません。<br>別のカテゴリを選ぶか、マトリクスから探してください。</div>'}
-function matrix(){let h='<thead><tr><th>FROM ＼ TO</th>'+C.map(x=>'<th>'+x+'</th>').join("")+'</tr></thead><tbody>';for(const a of C){h+='<tr><th class="left">'+a+'</th>'+C.map(b=>{const ok=paths(a,b).length>0;return '<td class="'+(ok?'hit':'')+'" data-a="'+a+'" data-b="'+b+'">'+(a===b?'—':ok?'●':'')+'</td>'}).join("")+'</tr>'} $("matrix").innerHTML=h+'</tbody>'}
-from.onchange=render;to.onchange=render;$("swap").onclick=()=>{const x=from.value;from.value=to.value;to.value=x;render()};
-$("tabRoute").onclick=()=>{$("routePanel").style.display="block";$("matrixPanel").style.display="none";$("tabRoute").classList.add("on");$("tabMatrix").classList.remove("on")};
-$("tabMatrix").onclick=()=>{$("routePanel").style.display="none";$("matrixPanel").style.display="block";$("tabMatrix").classList.add("on");$("tabRoute").classList.remove("on")};
-$("matrix").onclick=e=>{const td=e.target.closest(".hit");if(!td)return;from.value=td.dataset.a;to.value=td.dataset.b;$("tabRoute").click();render()};
-matrix();render();
+function reachableFrom(a){
+ const g=buildGraph(), start="C:"+a, seen=new Set([start]), q=[start];
+ for(let i=0;i<q.length;i++){
+   for(const e of (g.get(q[i])||[])){if(seen.has(e.to))continue;seen.add(e.to);q.push(e.to);}
+ }
+ return seen;
+}
+function shortestPaths(a,b,maxPaths=12){
+ if(!a||!b||a===b)return[];
+ const g=buildGraph(), start="C:"+a, goal="C:"+b;
+ const dist=new Map([[start,0]]), parents=new Map(), q=[start], targetDist=null;
+ for(let qi=0;qi<q.length;qi++){
+   const cur=q[qi], d=dist.get(cur);
+   if(targetDist!==null && d>=targetDist)continue;
+   for(const e of (g.get(cur)||[])){
+     const nd=d+1;
+     if(targetDist!==null && nd>targetDist)continue;
+     if(!dist.has(e.to)){dist.set(e.to,nd);q.push(e.to);parents.set(e.to,[{prev:cur,meta:e.meta}]);if(e.to===goal)targetDist=nd;}
+     else if(dist.get(e.to)===nd){const arr=parents.get(e.to)||[];if(arr.length<8)arr.push({prev:cur,meta:e.meta});parents.set(e.to,arr);}
+   }
+ }
+ if(!dist.has(goal))return[];
+ const out=[];
+ function walk(node,path,edges){
+   if(out.length>=maxPaths)return;
+   if(node===start){out.push({nodes:[start,...path.reverse()],edges:[...edges].reverse()});path.reverse();return;}
+   for(const p of (parents.get(node)||[])){
+     if(out.length>=maxPaths)break;
+     walk(p.prev,[node,...path],[...edges,p.meta]);
+   }
+ }
+ walk(goal,[],[]);
+ const seen=new Set(), clean=[];
+ for(const p of out){const key=p.nodes.join(">");if(!seen.has(key)){seen.add(key);clean.push(p)}}
+ return clean;
+}
+function nodeLabel(n){return n.slice(2)}
+function routeItems(p){return p.nodes.filter(n=>n.startsWith("I:")).map(nodeLabel)}
+function renderRoute(p,index){
+ const nodes=p.nodes;let html='<article class="route"><div class="route-top"><div class="route-title">'+esc(nodeLabel(nodes[0]))+' → '+esc(nodeLabel(nodes[nodes.length-1]))+'</div><span class="badge">'+routeItems(p).length+'回の調合</span></div><div class="chain">';
+ nodes.forEach((n,i)=>{
+   const label=esc(nodeLabel(n)), type=n[0]==="C"?"cat":"item";
+   html+='<div class="node '+type+'"><div class="small">'+(type==="cat"?"カテゴリ":"中継調合品")+'</div><strong>'+label+'</strong></div>';
+   if(i<nodes.length-1)html+='<div class="arrow">›</div>';
+ });
+ html+='</div>';
+ const items=routeItems(p);
+ if(items.length){html+='<div class="materials">';for(let i=0;i<p.edges.length;i++){const meta=p.edges[i];if(!meta.r||!meta.carry)continue;const carry=meta.carry;html+='<span class="mat carry">引継ぎ: '+esc(carry)+(meta.effect?'（カテゴリ付与）':'')+'</span>';}html+='</div>';
+   html+='<div class="route-note">';const uniq=[...new Set(items)];for(const item of uniq){const r=R.find(x=>x.n===item);if(!r)continue;const mats=r.i.map(x=>x.startsWith("@")?'<span class="mat cat">'+esc(x.slice(1))+'</span>':'<span class="mat">'+esc(x)+'</span>').join("");html+='<div><b>'+esc(item)+'</b>：'+mats+'</div>';}html+='</div>';
+ }
+ return html+'</article>';
+}
+function render(){
+ const a=from.value,b=to.value;const ps=shortestPaths(a,b,12);$("count").textContent=(ps.length?ps.length+(ps.length>=12?"+":""):0)+"件表示";
+ $("summary").innerHTML='<span class="pill blue">登録レシピ '+activeRecipes().length+'件</span><span class="pill good">カテゴリ '+C.length+'種</span>'+($("includeDlc").checked?'<span class="pill warn">DLC込み</span>':'')+($("includeEffects").checked?'<span class="pill">カテゴリ付与ON</span>':'');
+ $("routes").innerHTML=ps.length?ps.map(renderRoute).join(""):'<div class="empty">この2カテゴリ間のルートが見つかりません。<br>設定を変えると別ルートが見つかる場合があります。</div>';
+}
+function matrix(){let h='<thead><tr><th>FROM ＼ TO</th>'+C.map(x=>'<th>'+esc(x)+'</th>').join("")+'</tr></thead><tbody>';for(const a of C){const reach=reachableFrom(a);h+='<tr><th class="left">'+esc(a)+'</th>'+C.map(b=>{const ok=a===b||reach.has("C:"+b);return '<td class="'+(ok?'hit':'')+'" data-a="'+esc(a)+'" data-b="'+esc(b)+'">'+(a===b?'—':ok?'●':'')+'</td>'}).join("")+'</tr>'}$("matrix").innerHTML=h+'</tbody>'}
+function refreshAll(){render();matrix()}
+from.onchange=render;to.onchange=render;$('swap').onclick=()=>{const x=from.value;from.value=to.value;to.value=x;render()};$('includeDlc').onchange=refreshAll;$('includeEffects').onchange=refreshAll;
+$('tabRoute').onclick=()=>{$('routePanel').style.display='block';$('matrixPanel').style.display='none';$('tabRoute').classList.add('on');$('tabMatrix').classList.remove('on')};
+$('tabMatrix').onclick=()=>{$('routePanel').style.display='none';$('matrixPanel').style.display='block';$('tabMatrix').classList.add('on');$('tabRoute').classList.remove('on')};
+$('matrix').onclick=e=>{const td=e.target.closest('.hit');if(!td)return;from.value=td.dataset.a;to.value=td.dataset.b;$('tabRoute').click();render()};
+refreshAll();
 </script></body></html>
