@@ -86,15 +86,18 @@ function shortestPaths(a,b,maxPaths=12){
  }
  if(!dist.has(goal))return[];
  const out=[];
- function build(node,nodesRev,edgesRev){
+ function build(node,nodePath,edgePath){
    if(out.length>=maxPaths)return;
    if(node===start){
-     out.push({nodes:[start,...nodesRev.slice().reverse()],edges:edgesRev.slice().reverse()});
+     out.push({
+       nodes:[start,...nodePath.slice().reverse()],
+       edges:edgePath.slice().reverse()
+     });
      return;
    }
    for(const p of (parents.get(node)||[])){
      if(out.length>=maxPaths)break;
-     build(p.prev,[node,...nodesRev],[p.meta,...edgesRev]);
+     build(p.prev,[...nodePath,node],[...edgePath,p.meta]);
    }
  }
  build(goal,[],[]);
